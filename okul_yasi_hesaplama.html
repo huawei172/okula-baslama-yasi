@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Okul Başlama Yaşı Hesaplama</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Uzay arka planı ve kayan yıldız efekti */
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: radial-gradient(ellipse at bottom, #0d0d2b 0%, #000 100%);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 15px 50px rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #fff;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+      color: #ddd;
+    }
+
+    select, input[type="tel"] {
+      display: block;
+      margin: 8px auto;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1.5px solid #888;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 300px;
+      box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+      background-color: #1c1c2e;
+      color: white;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
+      font-size: 1.1rem;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    #sonuc {
+      margin-top: 20px;
+      padding: 18px;
+      background: linear-gradient(135deg, #1e1e2f, #2b2b40);
+      border-left: 5px solid #00bfff;
+      border-radius: 10px;
+      min-height: 60px;
+      font-size: 1rem;
+      color: #f0f0f0;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #aaa;
+    }
+
+    footer a {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 14px;
+      background-color: #00b894;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    footer p:last-child {
+      margin-top: 10px;
+      font-style: italic;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>2025 - 2026 Eğitim Öğretim Yılı Okula Başlama Yaşı Hesaplama</h1>
+    <h1><strong>30.09.2025 İtibarıyla Hesaplama Yapılır</strong></h1>
+
+    <label for="gun">Gün:</label>
+    <select id="gun"></select>
+
+    <label for="ay">Ay:</label>
+    <select id="ay"></select>
+
+    <label for="yil">Yıl:</label>
+    <select id="yil"></select>
+
+    <input type="tel" id="dogumTarihi" placeholder="gg.aa.yyyy" readonly style="display:none;">
+
+    <button onclick="secimleHesapla()"><i class="fas fa-calculator"></i> Hesapla</button>
+
+    <div id="sonuc"></div>
+
+    <footer>
+      <p>
+        Hesaplama işlemleri <strong>Okul Öncesi ve İlköğretim Kurumları Yönetmeliği</strong>
+        <strong>MADDE 11</strong>’de yer alan yaş şartları dikkate alınarak yapılmaktadır.
+      </p>
+      <a href="https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=19942&MevzuatTur=7&MevzuatTertip=5" target="_blank">
+        Okul Öncesi ve İlköğretim Kurumları Yönetmeliğine Ulaşmak İçin <strong>TIKLAYINIZ</strong>
+      </a>
+      <p>Powered by: <a href="https://www.instagram.com/tanjukkaya?igsh=NGFheTR2am5pejZq" target="_blank">Tanju</a></p>
+    </footer>
+  </div>
+
+  <script>
+    const gunSec = document.getElementById("gun");
+    const aySec = document.getElementById("ay");
+    const yilSec = document.getElementById("yil");
+
+    window.onload = function () {
+      document.getElementById("sonuc").innerHTML = "🎒 Hadi doğum tarihini gir bakalım, okul yaşın gelmiş mi? 😀";
+    };
+
+    for (let i = 1; i <= 31; i++) {
+      gunSec.innerHTML += `<option value="${i.toString().padStart(2, '0')}">${i}</option>`;
+    }
+
+    const aylar = [
+      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+      "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    for (let i = 0; i < aylar.length; i++) {
+      aySec.innerHTML += `<option value="${(i+1).toString().padStart(2, '0')}">${aylar[i]}</option>`;
+    }
+
+    for (let i = 2012; i <= 2025; i++) {
+      yilSec.innerHTML += `<option value="${i}">${i}</option>`;
+    }
+
+    function secimleHesapla() {
+      const gun = gunSec.value;
+      const ay = aySec.value;
+      const yil = yilSec.value;
+      const dogumTarihiInput = `${gun}.${ay}.${yil}`;
+      document.getElementById("dogumTarihi").value = dogumTarihiInput;
+      hesapla();
+    }
+
+    function hesapla() {
+      const inputDegeri = document.getElementById("dogumTarihi").value.trim();
+      const regex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
+      const eslesme = inputDegeri.match(regex);
+
+      if (!eslesme) {
+        document.getElementById("sonuc").innerHTML =
+          "❗ Lütfen tarihi <strong>gg.aa.yyyy</strong> formatında girin. Örn: 15.09.2019";
+        return;
+      }
+
+      const gun = parseInt(eslesme[1], 10);
+      const ay = parseInt(eslesme[2], 10) - 1;
+      const yil = parseInt(eslesme[3], 10);
+
+      const dogumTarihi = new Date(yil, ay, gun);
+      if (isNaN(dogumTarihi)) {
+        document.getElementById("sonuc").innerHTML = "❗ Geçersiz tarih girdiniz.";
+        return;
+      }
+
+      const buYil = new Date().getFullYear();
+      const kontrolTarihi = new Date(buYil, 8, 30);
+
+      let toplamAy = (kontrolTarihi.getFullYear() - dogumTarihi.getFullYear()) * 12;
+      toplamAy += kontrolTarihi.getMonth() - dogumTarihi.getMonth();
+      if (kontrolTarihi.getDate() < dogumTarihi.getDate()) toplamAy--;
+
+      const farkZaman = kontrolTarihi.getTime() - dogumTarihi.getTime();
+      const farkTarihi = new Date(farkZaman);
+
+      const yasYil = farkTarihi.getUTCFullYear() - 1970;
+      const yasAy = farkTarihi.getUTCMonth();
+      const yasGun = farkTarihi.getUTCDate() - 1;
+
+      if (yasYil > 10) {
+        document.getElementById("sonuc").innerHTML =
+          "❗ Girilen doğum tarihi <strong>10 yaşından</strong> büyük olduğu için ilkokula başlama yaşı aralığında değildir.";
+        return;
+      }
+
+      let sonuc = `<strong>30 Eylül ${buYil} itibariyle:</strong><br>`;
+      sonuc += `Çocuğunuz: <strong><span style="color:#00ff99">${yasYil} yıl ${yasAy} ay ${yasGun} gün</span></strong> yaşındadır. (<span style="color:#ffff66; font-weight:bold">${toplamAy} ay</span>)<br><br>`;
+
+
+      if (toplamAy >= 69) {
+        sonuc += "✅ <strong>İlkokul 1. sınıfa kaydınızın yapılması zorunludur. Kayıt erteleme hakkınız bulunmamaktadır.</strong><br>";
+        if (toplamAy <= 71) {
+          sonuc += "ℹ️ Ayrıca, öğrencinizin kaydını bir yıl erteleyebilir veya okul öncesi eğitime yönlendirilebilirsiniz (veli talebiyle).";
+        }
+      } else if (toplamAy >= 66 && toplamAy <= 68) {
+        sonuc += "🟡 <strong>Veli izni olması durumunda öğrencinin kaydı ilkokul 1. sınıfa yapılabilir.</strong>";
+      } else if (toplamAy >= 57 && toplamAy <= 68) {
+        sonuc += "🎓 <strong>Öğrencinizi okul öncesi eğitime (anaokulu veya anasınıfı) kayıt yaptırabilirsiniz.</strong>";
+      } else if (toplamAy >= 45 && toplamAy <= 56) {
+        sonuc += "🎓 <strong>Öğrencinizi ana sınıfına kayıt yaptırabilirsiniz.</strong>";
+      } else if (toplamAy >= 36 && toplamAy < 45) {
+        sonuc += "🎓 <strong>Fiziki imkanlar yeterliyse anaokulu/uygulama sınıflarına kayıt yapılabilir.</strong>";
+      } else {
+        sonuc += "🚫 <strong>Öğrenciniz henüz kayıt için uygun yaşta değildir.</strong>";
+      }
+
+      document.getElementById("sonuc").innerHTML = sonuc;
+    }
+  </script>
+</body>
+</html>
